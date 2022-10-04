@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2022-10-01 18:20:21.184613 by randomTrips.py v1_14_1+0000-f654d7b963e
+<configuration>
+    <additional-files value=".\addition.xml"/>
+    <end value="60"/>
+    <fringe-factor value="10.0"/>
+    <net-file value=".\simple.net.xml"/>
+    <period value="0.3"/>
+    <random value="True"/>
+    <route-file value="simple_route.rou.xml"/>
+    <validate value="True"/>
+</configuration>
+-->
+
+<!-- generated on 2022-10-01 18:20:21 by Eclipse SUMO duarouter Version 1.14.1
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value=".\simple.net.xml"/>
+        <additional-files value=".\addition.xml"/>
+        <route-files value="trips.trips.xml"/>
+    </input>
+
+    <output>
+        <output-file value="trips.trips.xml.tmp"/>
+        <alternatives-output value="NUL"/>
+        <write-trips value="true"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="60"/>
+    </time>
+
+    <report>
+        <no-warnings value="true"/>
+        <ignore-errors value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <trip id="0" depart="0.00" from="-E24" to="E20"/>
+    <trip id="2" depart="0.60" from="-E20" to="-E17"/>
+    <trip id="3" depart="0.90" from="-E24" to="E20"/>
+    <trip id="6" depart="1.80" from="-E22" to="-E17"/>
+    <trip id="10" depart="3.00" from="E17" to="E20"/>
+    <trip id="11" depart="3.30" from="E17" to="E22"/>
+    <trip id="14" depart="4.20" from="-E24" to="-E23"/>
+    <trip id="16" depart="4.80" from="E17" to="E20"/>
+    <trip id="18" depart="5.40" from="-E22" to="-E21"/>
+    <trip id="21" depart="6.30" from="-E22" to="E20"/>
+    <trip id="23" depart="6.90" from="-E22" to="E19"/>
+    <trip id="24" depart="7.20" from="-E22" to="E20"/>
+    <trip id="25" depart="7.50" from="-E24" to="E22"/>
+    <trip id="26" depart="7.80" from="-E24" to="-E17"/>
+    <trip id="27" depart="8.10" from="-E20" to="-E18"/>
+    <trip id="29" depart="8.70" from="-E24" to="E20"/>
+    <trip id="30" depart="9.00" from="-E20" to="-E17"/>
+    <trip id="31" depart="9.30" from="-E24" to="E20"/>
+    <trip id="33" depart="9.90" from="-E20" to="E24"/>
+    <trip id="34" depart="10.20" from="-E24" to="E20"/>
+    <trip id="39" depart="11.70" from="-E24" to="-E17"/>
+    <trip id="40" depart="12.00" from="-E20" to="E27"/>
+    <trip id="41" depart="12.30" from="-E22" to="E20"/>
+    <trip id="42" depart="12.60" from="-E20" to="E22"/>
+    <trip id="44" depart="13.20" from="-E20" to="E22"/>
+    <trip id="45" depart="13.50" from="-E20" to="-E17"/>
+    <trip id="46" depart="13.80" from="-E22" to="E20"/>
+    <trip id="48" depart="14.40" from="-E22" to="-E17"/>
+    <trip id="50" depart="15.00" from="-E24" to="E20"/>
+    <trip id="54" depart="16.20" from="-E24" to="E26"/>
+    <trip id="55" depart="16.50" from="E17" to="E20"/>
+    <trip id="56" depart="16.80" from="-E20" to="E22"/>
+    <trip id="57" depart="17.10" from="-E22" to="-E17"/>
+    <trip id="58" depart="17.40" from="E17" to="E22"/>
+    <trip id="59" depart="17.70" from="E17" to="E20"/>
+    <trip id="61" depart="18.30" from="E17" to="E24"/>
+    <trip id="63" depart="18.90" from="-E23" to="E20"/>
+    <trip id="65" depart="19.50" from="E18" to="E22"/>
+    <trip id="66" depart="19.80" from="-E20" to="-E17"/>
+    <trip id="67" depart="20.10" from="E17" to="E20"/>
+    <trip id="71" depart="21.30" from="-E20" to="E22"/>
+    <trip id="72" depart="21.60" from="E17" to="E18"/>
+    <trip id="73" depart="21.90" from="-E20" to="-E17"/>
+    <trip id="74" depart="22.20" from="-E24" to="E20"/>
+    <trip id="76" depart="22.80" from="-E24" to="E20"/>
+    <trip id="77" depart="23.10" from="E18" to="E24"/>
+    <trip id="78" depart="23.40" from="-E20" to="E22"/>
+    <trip id="79" depart="23.70" from="E19" to="E20"/>
+    <trip id="80" depart="24.00" from="-E19" to="E23"/>
+    <trip id="83" depart="24.90" from="-E24" to="E20"/>
+    <trip id="84" depart="25.20" from="-E22" to="-E17"/>
+    <trip id="86" depart="25.80" from="-E22" to="-E17"/>
+    <trip id="89" depart="26.70" from="-E22" to="E24"/>
+    <trip id="90" depart="27.00" from="-E20" to="E24"/>
+    <trip id="95" depart="28.50" from="-E20" to="E24"/>
+    <trip id="98" depart="29.40" from="-E24" to="E22"/>
+    <trip id="104" depart="31.20" from="E17" to="E20"/>
+    <trip id="106" depart="31.80" from="-E20" to="-E17"/>
+    <trip id="107" depart="32.10" from="-E22" to="E24"/>
+    <trip id="108" depart="32.40" from="-E22" to="E24"/>
+    <trip id="110" depart="33.00" from="E17" to="E24"/>
+    <trip id="112" depart="33.60" from="-E20" to="E22"/>
+    <trip id="115" depart="34.50" from="E18" to="E22"/>
+    <trip id="118" depart="35.40" from="-E24" to="E20"/>
+    <trip id="119" depart="35.70" from="-E22" to="E24"/>
+    <trip id="122" depart="36.60" from="-E22" to="E24"/>
+    <trip id="123" depart="36.90" from="-E21" to="E20"/>
+    <trip id="124" depart="37.20" from="-E24" to="E22"/>
+    <trip id="126" depart="37.80" from="-E22" to="E20"/>
+    <trip id="127" depart="38.10" from="-E20" to="E24"/>
+    <trip id="128" depart="38.40" from="-E24" to="E26"/>
+    <trip id="129" depart="38.70" from="-E24" to="E20"/>
+    <trip id="130" depart="39.00" from="E17" to="E22"/>
+    <trip id="131" depart="39.30" from="-E20" to="-E17"/>
+    <trip id="132" depart="39.60" from="-E20" to="E22"/>
+    <trip id="133" depart="39.90" from="-E22" to="-E18"/>
+    <trip id="134" depart="40.20" from="-E20" to="E24"/>
+    <trip id="136" depart="40.80" from="-E20" to="-E17"/>
+    <trip id="139" depart="41.70" from="-E24" to="E20"/>
+    <trip id="141" depart="42.30" from="-E24" to="E20"/>
+    <trip id="142" depart="42.60" from="-E24" to="E20"/>
+    <trip id="145" depart="43.50" from="E17" to="E22"/>
+    <trip id="148" depart="44.40" from="-E22" to="E20"/>
+    <trip id="150" depart="45.00" from="-E20" to="E22"/>
+    <trip id="151" depart="45.30" from="-E22" to="E24"/>
+    <trip id="152" depart="45.60" from="-E20" to="E22"/>
+    <trip id="153" depart="45.90" from="-E22" to="E24"/>
+    <trip id="154" depart="46.20" from="E17" to="E20"/>
+    <trip id="157" depart="47.10" from="-E20" to="E22"/>
+    <trip id="160" depart="48.00" from="E18" to="E22"/>
+    <trip id="162" depart="48.60" from="E17" to="E20"/>
+    <trip id="163" depart="48.90" from="-E24" to="E22"/>
+    <trip id="166" depart="49.80" from="-E20" to="E23"/>
+    <trip id="167" depart="50.10" from="-E24" to="-E17"/>
+    <trip id="168" depart="50.40" from="E17" to="E20"/>
+    <trip id="170" depart="51.00" from="-E22" to="E20"/>
+    <trip id="171" depart="51.30" from="E17" to="E20"/>
+    <trip id="173" depart="51.90" from="-E20" to="E22"/>
+    <trip id="175" depart="52.50" from="-E24" to="-E17"/>
+    <trip id="176" depart="52.80" from="-E24" to="-E17"/>
+    <trip id="177" depart="53.10" from="-E22" to="E24"/>
+    <trip id="178" depart="53.40" from="-E20" to="E24"/>
+    <trip id="181" depart="54.30" from="-E20" to="E24"/>
+    <trip id="182" depart="54.60" from="-E22" to="E19"/>
+    <trip id="184" depart="55.20" from="-E24" to="E20"/>
+    <trip id="185" depart="55.50" from="E23" to="E23"/>
+    <trip id="187" depart="56.10" from="-E20" to="-E19"/>
+    <trip id="188" depart="56.40" from="E17" to="E20"/>
+    <trip id="192" depart="57.60" from="-E22" to="E20"/>
+    <trip id="193" depart="57.90" from="E28" to="E24"/>
+    <trip id="194" depart="58.20" from="-E24" to="E21"/>
+    <trip id="196" depart="58.80" from="-E22" to="-E17"/>
+    <trip id="197" depart="59.10" from="-E20" to="E24"/>
+    <trip id="198" depart="59.40" from="E17" to="E20"/>
+    <trip id="199" depart="59.70" from="-E24" to="E20"/>
+</routes>
