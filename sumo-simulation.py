@@ -15,11 +15,16 @@ import datetime
 
 rng = np.random.default_rng()
 
-def info_function(x, y):
+def info_function(n_veh, tw, tt):
     try:
-        return 2 * (x/math.sqrt(1 + x ** 2 + 600)) / math.log(y)
+        i1 = 4* n_veh / (math.sqrt(600 + n_veh ** 2))
+        if tw <= 1:
+            i2 = 1/(tw-1+tt)
+        else:
+            i2 = 1/math.log(tw + tt) 
+        return math.atan(i1 * i2) / (3 * math.pi / 7)
     except Exception as e:
-        print(f'x is {x}, y is {y}')
+        print(f'x is {n_veh}, y is {tw}')
         raise e
 
 class Edge(traci.StepListener):
@@ -55,7 +60,7 @@ class Edge(traci.StepListener):
             self.vehicles_unsuccessful += 1
             self.logger.info(f'Message from vehicle {veh_id} exceeds uplinkbandwidth')
             can_upload = False
-        if self.vehicles_in_trigger_period == self.vehicles_unsuccessful + self.vehicles_successful:
+        if self.vehicles_in_trigger_period == self.vehicles_successful:
             self.can_aggregate = True
         return can_upload
 
@@ -69,7 +74,7 @@ class Edge(traci.StepListener):
 
     def aggregate(self):
         aggregation_density, actual_density = float(self.vehicles_successful) / (poi_area := (self.diameter/2) ** 2 * math.pi), float(self.vehicles_in_trigger_period) / poi_area
-        info_value = info_function(self.vehicles_successful, self.current_time)
+        info_value = info_function(self.vehicles_successful, self.current_time, self.trigger_interval)
         self.logger.info(f'Aggregating for vehicle density {aggregation_density}, full trigger density {actual_density}, info value {info_value} ...')
         for _, vehicle in self.vehicles.items():
             vehicle.receive_aggregated_message(self.id, aggregation_density, actual_density, info_value, self.trigger_no, self.current_time)
@@ -199,14 +204,17 @@ class VehicleFactory(traci.StepListener):
                 self.response_times[k].append(v)
 
     def get_response_time_for_all_vehicles(self):
-        for veh in self.active_vehicles:
-            self.append_response_times(veh)
-        multiidx = pd.MultiIndex.from_tuples(self.response_times.keys())
-        df = pd.DataFrame([[np.mean([i[0] for i in v]), v[0][1], v[0][2], v[0][3], v[0][4]] for _, v in self.response_times.items()], index=multiidx)
-        df.columns = ['response_time', 'waiting_time', 'vehicle_density', 'trigger_density','info_value']
-        if len(df.index.get_level_values(0).unique()) == 1:
-            df.index = df.index.droplevel(0)
-        return df
+        try:
+            for veh in self.active_vehicles:
+                self.append_response_times(veh)
+            multiidx = pd.MultiIndex.from_tuples(self.response_times.keys())
+            df = pd.DataFrame([[np.mean([i[0] for i in v]), v[0][1], v[0][2], v[0][3], v[0][4]] for _, v in self.response_times.items()], index=multiidx)
+            df.columns = ['response_time', 'waiting_time', 'vehicle_density', 'trigger_density','info_value']
+            if len(df.index.get_level_values(0).unique()) == 1:
+                df.index = df.index.droplevel(0)
+            return df
+        except Exception as e:
+            return pd.DataFrame()
         
 
     def adjust_vehicle_listeners(self):
@@ -255,7 +263,7 @@ def main():
         pythonCommand = 'python3'
     subprocess.run([pythonCommand, f"{os.environ['SUMO_HOME']}/tools/randomTrips.py", '-n', f'{networkLoc}/osm.net.xml', 
                     '-a', f'{networkLoc}/additionals.xml', '-e', cp['SIMULATION']['vehicle_generation_endtime'], '--random', '--random-depart-offset', '5', 
-                    '--period', str(1/cp.getfloat('SIMULATION', 'vehicles_generated_per_second')), '--validate', '-r', f'{networkLoc}/complex_route.rou.xml'], shell=True)
+                    '--period', str(1/cp.getfloat('SIMULATION', 'vehicles_generated_per_second')), '--validate', '-r', f'{networkLoc}/complex_route.rou.xml'])
 
     sumoBinary = cp['LOCATION']['sumoBin']
     sumoCmd = [sumoBinary, "-c", f'{networkLoc}/complex.sumocfg', "--step-length", cp['SIMULATION']['step_length'], '--quit-on-end']
@@ -281,32 +289,33 @@ def main():
 
 if __name__ == '__main__':
     global cp
-    cp = configparser.ConfigParser()
-    cp.read('./config.ini')
-    global simulation_step
-    simulation_step = cp.getfloat('SIMULATION', 'step_length') * 1000
-    logging.basicConfig(level=cp.getint('SIMULATION', 'loglevel'))
-    result_df = pd.DataFrame()
-    for i in range(cp.getint('SIMULATION', 'simulationRounds')):
-        concat_df = pd.concat([result_df, main()])
-        result_df = concat_df.groupby(concat_df.index).mean()
-        print(result_df.to_string())
-    curr_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')
-    result_df.to_csv(f'./simulation_results/result_{curr_time}.csv')
-    shutil.copyfile('config.ini', f'./simulation_results/config_{curr_time}.ini')
-    
-    #plot
-    fig, ax = plt.subplots()
-    p1, = ax.plot(result_df.index, result_df['response_time'], color='xkcd:red', label='Response time (ms)')
-    ax.set_xlabel('Aggregations') 
-    ax.set_ylabel('Response time (ms)', color='xkcd:red')
-    ax2 = ax.twinx()
-    p2, = ax2.plot(result_df.index, result_df['vehicle_density'], color='xkcd:grey', label=f'Vehicle density (vehicle/km\N{SUPERSCRIPT TWO})')
-    ax2.set_ylabel('Vehicle density (vehicle/km\N{SUPERSCRIPT TWO})', color='xkcd:grey')
-    ax3 = ax.twinx()
-    p3, = ax3.plot(result_df.index, result_df['info_value'], color='xkcd:blue', label='Information value')
-    ax3.set_ylabel('Information value', color='xkcd:blue')
-    ax.legend(handles=[p1, p2, p3], loc='best')
-    ax3.spines['right'].set_position(('outward', 80))
-    fig.tight_layout()
-    fig.savefig(f'./simulation_results/figure_{curr_time}.pdf')
+    for l in range(36):
+        cp = configparser.ConfigParser()
+        cp.read(f'./config_{l}.ini')
+        global simulation_step
+        simulation_step = cp.getfloat('SIMULATION', 'step_length') * 1000
+        logging.basicConfig(level=cp.getint('SIMULATION', 'loglevel'))
+        result_df = pd.DataFrame()
+        for i in range(cp.getint('SIMULATION', 'simulationRounds')):
+            concat_df = pd.concat([result_df, main()])
+            result_df = concat_df.groupby(concat_df.index).mean()
+            print(result_df.to_string())
+        #curr_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')
+        result_df.to_csv(f'./new_simulation_results/result_{l}.csv')
+        shutil.copyfile(f'config_{l}.ini', f'./new_simulation_results/config_{l}.ini')
+        
+        #plot
+        fig, ax = plt.subplots()
+        p1, = ax.plot(result_df.index, result_df['response_time'], color='xkcd:red', label='Response time (ms)')
+        ax.set_xlabel('Aggregations') 
+        ax.set_ylabel('Response time (ms)', color='xkcd:red')
+        ax2 = ax.twinx()
+        p2, = ax2.plot(result_df.index, result_df['vehicle_density'], color='xkcd:grey', label=f'Vehicle density (vehicle/km\N{SUPERSCRIPT TWO})')
+        ax2.set_ylabel('Vehicle density (vehicle/km\N{SUPERSCRIPT TWO})', color='xkcd:grey')
+        ax3 = ax.twinx()
+        p3, = ax3.plot(result_df.index, result_df['info_value'], color='xkcd:blue', label='Information value')
+        ax3.set_ylabel('Information value', color='xkcd:blue')
+        ax.legend(handles=[p1, p2, p3], loc='best')
+        ax3.spines['right'].set_position(('outward', 80))
+        fig.tight_layout()
+        fig.savefig(f'./new_simulation_results/figure_{l}.pdf')
